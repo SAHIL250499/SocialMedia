@@ -5,7 +5,8 @@ export class Register extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			username: ''
+			username: '',
+			password: ''
 		};
 		this.onChange = this.onChange.bind(this);
 		this.onSubmit = this.onSubmit.bind(this);

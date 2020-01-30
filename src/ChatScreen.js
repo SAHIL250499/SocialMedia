@@ -5,20 +5,23 @@ import SendMessageForm from './components/SendMessageForm';
 import RoomList from './components/RoomList';
 import NewRoomForm from './components/NewRoomForm';
 import { tokenUrl, instanceLocator } from './config';
+import TypingIndicator from './components/TypingIndicator';
 
-class App extends React.Component {
+class ChatScreen extends React.Component {
 	constructor() {
 		super();
 		this.state = {
 			roomId: null,
 			messages: [],
 			joinableRooms: [],
-			joinedRooms: []
+			joinedRooms: [],
+			usersWhoAreTyping: []
 		};
 		this.sendMessage = this.sendMessage.bind(this);
 		this.subscribeToRoom = this.subscribeToRoom.bind(this);
 		this.getRooms = this.getRooms.bind(this);
 		this.createRoom = this.createRoom.bind(this);
+		this.sendTypingEvent = this.sendTypingEvent.bind(this);
 	}
 
 	componentDidMount() {
@@ -48,6 +51,18 @@ class App extends React.Component {
 					onMessage: message => {
 						this.setState({
 							messages: [...this.state.messages, message]
+						});
+					},
+					onUserStartedTyping: user => {
+						this.setState({
+							usersWhoAreTyping: [...this.state.usersWhoAreTyping, user.name]
+						});
+					},
+					onUserStoppedTyping: user => {
+						this.setState({
+							usersWhoAreTyping: this.state.usersWhoAreTyping.filter(
+								username => username !== user.name
+							)
 						});
 					}
 				}
@@ -89,6 +104,12 @@ class App extends React.Component {
 			.catch(err => console.log('error creating room', err));
 	}
 
+	sendTypingEvent() {
+		this.currentUser
+			.isTypingIn({ roomId: this.state.roomId })
+			.catch(error => console.error('error', error));
+	}
+
 	render() {
 		return (
 			<div className="app">
@@ -101,9 +122,15 @@ class App extends React.Component {
 					roomId={this.state.roomId}
 					messages={this.state.messages}
 				/>
+				<div classname="typing_indicator">
+					<h3>Friend's Online</h3>
+					<TypingIndicator
+						usersWhoAreTyping={this.state.usersWhoAreTyping}></TypingIndicator>
+				</div>
 				<SendMessageForm
 					disabled={!this.state.roomId}
 					sendMessage={this.sendMessage}
+					onChange={this.sendTypingEvent}
 				/>
 				<NewRoomForm createRoom={this.createRoom} />
 			</div>
@@ -111,4 +138,4 @@ class App extends React.Component {
 	}
 }
 
-export default App;
+export default ChatScreen;

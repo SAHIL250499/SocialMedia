@@ -26,14 +26,17 @@ body {
 	grid-template-columns: repeat(6, 1fr);
 	grid-template-rows: 1fr 1fr 1fr 1fr 1fr 60px;
 	grid-template-areas:
-		'r m m m m m'
-		'r m m m m m'
-		'r m m m m m'
-		'r m m m m m'
-		'r m m m m m'
-		'n s s s s s';
+		'r m m m m t'
+		'r m m m m t'
+		'r m m m m t'
+		'r m m m m t'
+		'r m m m m t'
+		'n s s s s t';
 }
 
+.typing_indicator {
+	grid-area: t;
+}
 .new-room-form {
 	grid-area: n;
 }
@@ -50,7 +53,6 @@ body {
 	grid-area: s;
 }
 
-/* REST OF CSS */
 .rooms-list {
 	box-sizing: border-box;
 	padding: 10px;
@@ -62,7 +64,7 @@ body {
 .rooms-list ul {
 	list-style-type: none;
 	padding: 0;
-	overflow: scoll;
+	overflow: scroll;
 }
 
 .rooms-list li {
